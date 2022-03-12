@@ -5,6 +5,10 @@ Test smells are poorly designed tests that negatively affect the quality of test
 ## Goals
 
 - Collect suitable open source projects for analysis.
-- Implement test smell detection algorithms for chosen test smells. In more detail, try to improve detection algorithms used by other tools.
+- Implement test smell detection algorithms for chosen test smells. In more detail, try to improve detection algorithms used by existing tools.
 - Perform an empirical analysis of the developed test smells detection algorithms based on the set of open source projects.
 - Provide a labelled data set of open source projects with annotated test smells.
+
+## Target Language
+
+The tool is written in Java and is used to detect test smells in Java software projects. The target test framework is JUnit.
