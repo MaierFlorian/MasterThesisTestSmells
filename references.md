@@ -12,4 +12,11 @@ Test Smell Detection Tools: A Systematic Mapping Study
 tsDetect: An Open Source Test Smells Detection Tool
     - 2020
     - by A. Peruma et al.
+    - rule based
     - https://github.com/TestSmells/TestSmellDetector
+
+JNose
+    - 2020
+    - by Bispo et al.
+    - rule based
+    - https://github.com/arieslab/jnose
