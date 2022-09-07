@@ -2,6 +2,7 @@ package com.github.MaierFlorian.testsmelldetection.testSmells;
 
 import com.github.MaierFlorian.testsmelldetection.data.Configuration;
 import com.github.MaierFlorian.testsmelldetection.data.Method;
+import com.github.MaierFlorian.testsmelldetection.data.Statistics;
 import com.github.MaierFlorian.testsmelldetection.parsing.MethodExtractor;
 import com.github.MaierFlorian.testsmelldetection.parsing.CodeParser;
 import com.github.MaierFlorian.testsmelldetection.util.ControllerFromOutside;
@@ -20,14 +21,15 @@ public class ConditionalTestLogicDetector {
      * @param path Path pointing to the java file.
      * @return a List of "method" objects. Such an object includes e.g. the method-name, method-body, and how many loops it contains.
      */
-    public List<Method> detectCTLinFile(String path){
+    public List<Method> detectCTLinFile(List<Method> methods, String path){
         ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Start to detect CTL in " + path);
 
-        List<Method> methods = new MethodExtractor().extractMethodsFromFile(path);
-
         for(Method method : methods) {
-            method.setAmountIfAndSwitch(findIfAndSwitchStatements(method));
+            long startTime = System.nanoTime();
+            method.setAmountIfAndSwitch(findIfAndSwitchStatements(method) + findTryStatements(method));
             method.setAmountLoops(findLoops(method));
+            long stopTime = System.nanoTime();
+            Statistics.getInstance().addTimeToDetectCTL(stopTime - startTime);
             ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] " + method.getAmountIfAndSwitch() + " if or switch statements found in Method '" + method.getMethodName() + "'");
             ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] " + method.getAmountLoops() + " loops found in Method '" + method.getMethodName() + "'");
         }
@@ -76,6 +78,16 @@ public class ConditionalTestLogicDetector {
                 found = 0;
                 ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Method '" + method.getMethodName() + "' only contains 'if'/'switch' statements containing only 'print' statements.");
             }
+        }
+        return found;
+    }
+
+    private int findTryStatements(Method method){
+        int found = 0;
+        Pattern pat = Pattern.compile("(\n)(\s|\t)*((try))(\s)*([(].*)?(?=[{])");
+        Matcher m = pat.matcher(method.getMethodBody());
+        while (m.find()) {
+            found++;
         }
         return found;
     }

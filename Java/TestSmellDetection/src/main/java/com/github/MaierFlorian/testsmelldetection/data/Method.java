@@ -1,5 +1,7 @@
 package com.github.MaierFlorian.testsmelldetection.data;
 
+import java.util.Objects;
+
 public class Method {
 
     private String MethodDeclaration;
@@ -8,12 +10,12 @@ public class Method {
 
     // Anonymous Test
 
-    private int anonymousTestRating = -1;
-    private int test_methodname = -1;
-    private int method_state_behaviour = -1;
-    private int specificRequirement = -1;
-    private int inputStateWorkflow_output = -1;
-    private int action_conditionState = -1;
+    private int anonymousTestRating = 3;
+    private int test_methodname = 3;
+    private int method_state_behaviour = 3;
+    private int specificRequirement = 3;
+    private int inputStateWorkflow_output = 3;
+    private int action_conditionState = 3;
 
     // Conditional Test Logic
 
@@ -23,6 +25,33 @@ public class Method {
     // Long Test
 
     private int amountLines = -1;
+
+    // Assertion Roulette
+
+    private int amountAssertions; // also used by Rotten Green Test
+
+    // Rotten Green Test
+
+    private int amountAssertionsInsideCTL;
+    private boolean assertionAfterReturn = false;
+    private int helperMethodsInsideCTL;
+
+    // #################################
+    // Equals
+    // #################################
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Method method = (Method) o;
+        return Objects.equals(MethodDeclaration, method.MethodDeclaration);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(MethodDeclaration);
+    }
 
 
     // #################################
@@ -123,5 +152,37 @@ public class Method {
 
     public void setAmountLines(int amountLines) {
         this.amountLines = amountLines;
+    }
+
+    public int getAmountAssertions() {
+        return amountAssertions;
+    }
+
+    public void setAmountAssertions(int amountAssertions) {
+        this.amountAssertions = amountAssertions;
+    }
+
+    public int getAmountAssertionsInsideCTL() {
+        return amountAssertionsInsideCTL;
+    }
+
+    public void setAmountAssertionsInsideCTL(int amountAssertionsInsideCTL) {
+        this.amountAssertionsInsideCTL = amountAssertionsInsideCTL;
+    }
+
+    public boolean isAssertionAfterReturn() {
+        return assertionAfterReturn;
+    }
+
+    public void setAssertionAfterReturn(boolean assertionAfterReturn) {
+        this.assertionAfterReturn = assertionAfterReturn;
+    }
+
+    public int getHelperMethodsInsideCTL() {
+        return helperMethodsInsideCTL;
+    }
+
+    public void setHelperMethodsInsideCTL(int helperMethodsInsideCTL) {
+        this.helperMethodsInsideCTL = helperMethodsInsideCTL;
     }
 }

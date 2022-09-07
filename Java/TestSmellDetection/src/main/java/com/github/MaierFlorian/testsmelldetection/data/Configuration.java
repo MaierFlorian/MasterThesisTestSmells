@@ -25,25 +25,25 @@ public class Configuration {
 
     private boolean anonymousTest = true;
     private boolean test_methodname = true;
-    private boolean method_state_behaviour = true; // TODO
-    private boolean specificRequirement = true; // TODO
-    private boolean inputStateWorkflow_output = true; // TODO
-    private boolean action_conditionState = true; // TODO
+    private boolean method_state_behaviour = true;
+    private boolean specificRequirement = true;
+    private boolean inputStateWorkflow_output = true;
+    private boolean action_conditionState = true;
 
-    private boolean longTest = true; // TODO
-    private int numberLines = 13; // TODO
+    private boolean longTest = true;
+    private int numberLines = 13;
 
     private boolean conditionalTestLogic = true;
     private boolean onlyPrint = false;
 
-    private boolean rottenGreenTest = true; // TODO
+    private boolean rottenGreenTest = true;
 
-    private boolean assertionRoulette = true; // TODO
-    private int numberAssertions = 1; // TODO
+    private boolean assertionRoulette = true;
+    private int numberAssertions = 1;
 
-    private boolean eagerTest = true; // TODO
+    private boolean eagerTest = false; // TODO
 
-    private boolean lazyTest = true; // TODO
+    private boolean lazyTest = false; // TODO
 
     //#############################################
     // Log

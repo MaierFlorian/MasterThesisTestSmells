@@ -34,7 +34,7 @@ public class TextFromFileExtractor {
     public String getFileContentWithoutComments(String path){
         String content = getFileContent(path);
         // remove lines starting with "//"
-        content = content.replaceAll("//.*", "");
+        content = content.replaceAll("(?<=;|\s) *//.*", "");
         // remove everything between multiline comment
         content = content.replaceAll("((['\"])(?:(?!\\2|\\\\).|\\\\.)*\\2)|\\/\\/[^\\n]*|\\/\\*(?:[^*]|\\*(?!\\/))*\\*\\/", "");
         return content;

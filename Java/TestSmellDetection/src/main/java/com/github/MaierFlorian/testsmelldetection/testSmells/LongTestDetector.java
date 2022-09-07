@@ -1,6 +1,7 @@
 package com.github.MaierFlorian.testsmelldetection.testSmells;
 
 import com.github.MaierFlorian.testsmelldetection.data.Method;
+import com.github.MaierFlorian.testsmelldetection.data.Statistics;
 import com.github.MaierFlorian.testsmelldetection.parsing.CodeParser;
 import com.github.MaierFlorian.testsmelldetection.parsing.MethodExtractor;
 import com.github.MaierFlorian.testsmelldetection.util.ControllerFromOutside;
@@ -13,10 +14,8 @@ import java.util.List;
 
 public class LongTestDetector {
 
-    public List<Method> detectLongTestsInFile(String path){
+    public List<Method> detectLongTestsInFile(List<Method> methods, String path){
         ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Start to detect LT in " + path);
-
-        List<Method> methods = new MethodExtractor().extractMethodsFromFile(path);
 
         for(Method method : methods) {
             method.setAmountLines(countStatementsInMethod(method));
@@ -28,6 +27,7 @@ public class LongTestDetector {
     }
 
     private int countStatementsInMethod(Method method){
+        long startTime = System.nanoTime();
         String content = method.getMethodBody();
         CodeParser cp = new CodeParser();
         content = cp.removeStringsInsideQuotationMarks(content); // remove all strings inside quotation marks so we can actually filter for keywords later
@@ -36,13 +36,15 @@ public class LongTestDetector {
 
         int amountSemicolons = content.length() - content.replace(";", "").length(); // https://stackoverflow.com/questions/275944/how-do-i-count-the-number-of-occurrences-of-a-char-in-a-string
 
-        String temp[] = content.replace("(", " ").split(" ");
+        String temp[] = content.replace("(", " ").split("\\p{Blank}");
         int amountKeywords = 0;
         for(int i=0; i<temp.length; i++){
             if(keywords.contains(temp[i].toLowerCase()))
                 amountKeywords++;
         }
 
+        long stopTime = System.nanoTime();
+        Statistics.getInstance().addTimeToCountStatementsPerMethod(stopTime - startTime);
         return amountSemicolons + amountKeywords;
     }
 

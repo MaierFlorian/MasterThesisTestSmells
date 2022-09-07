@@ -2,9 +2,9 @@ package com.github.MaierFlorian.testsmelldetection.logic;
 
 import com.github.MaierFlorian.testsmelldetection.data.Configuration;
 import com.github.MaierFlorian.testsmelldetection.data.Method;
+import com.github.MaierFlorian.testsmelldetection.data.Statistics;
 import com.github.MaierFlorian.testsmelldetection.parsing.MethodExtractor;
-import com.github.MaierFlorian.testsmelldetection.testSmells.AnonymousTestDetector;
-import com.github.MaierFlorian.testsmelldetection.testSmells.ConditionalTestLogicDetector;
+import com.github.MaierFlorian.testsmelldetection.testSmells.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import com.github.MaierFlorian.testsmelldetection.testSmells.LongTestDetector;
 import com.github.MaierFlorian.testsmelldetection.util.ControllerFromOutside;
 import com.opencsv.*;
 
@@ -46,18 +46,21 @@ public class SmellDetector {
         rows = new ArrayList<>();
 
         for(File file : Configuration.getInstance().getFiles()) {
+            List<Method> allMethods = new MethodExtractor().extractMethodsFromFile(file.getAbsolutePath());
             // Create row for each method in file
-            for (Method m : new MethodExtractor().extractMethodsFromFile(file.getAbsolutePath())){
+            for (Method m : allMethods){
                 List<String> row = createEmptyRow(csv_header);
                 row.set(csv_header.indexOf("Path"), file.getAbsolutePath());
                 row.set(csv_header.indexOf("Method"), m.getMethodName());
-                if(m.getMethodDeclaration().replace(" ", "").replace("\t", "").replace("\n", "").startsWith("@Test"))
-                    row.set(csv_header.indexOf("isTestMethod"), "yes");
+                if(!m.getMethodDeclaration().replace(" ", "").replace("\t", "").replace("\n", "").startsWith("@Test"))
+                    continue;
                 rows.add(row);
             }
             if(Configuration.getInstance().isAnonymousTest()){
-                List<Method> result = new AnonymousTestDetector().detectAnonymousTestsInFile(file.getAbsolutePath());
+                List<Method> result = new AnonymousTestDetector().detectAnonymousTestsInFile(allMethods, file.getAbsolutePath());
                 for(Method m : result){
+                    if(!m.getMethodDeclaration().replace(" ", "").replace("\t", "").replace("\n", "").startsWith("@Test"))
+                        continue;
                     List<String> row = getRowOfMethod(m, file.getAbsolutePath());
 //                    if(m.getAnonymousTestRating() == 0)
 //                        row.set(csv_header.indexOf("Anonymous Test"), "0");
@@ -79,20 +82,28 @@ public class SmellDetector {
                 }
             }
             if(Configuration.getInstance().isConditionalTestLogic()){
-                List<Method> result = new ConditionalTestLogicDetector().detectCTLinFile(file.getAbsolutePath());
+                List<Method> result = new ConditionalTestLogicDetector().detectCTLinFile(allMethods, file.getAbsolutePath());
                 for(Method m : result){
+                    if(!m.getMethodDeclaration().replace(" ", "").replace("\t", "").replace("\n", "").startsWith("@Test"))
+                        continue;
                     List<String> row = getRowOfMethod(m, file.getAbsolutePath());
-                    if(m.getAmountIfAndSwitch() > 0 || m.getAmountLoops() > 0)
-                        row.set(csv_header.indexOf("Conditional Test Logic"), "1");
-                    else
+                    if (m.getAmountIfAndSwitch() <= 0 && m.getAmountLoops() <= 0)
                         row.set(csv_header.indexOf("Conditional Test Logic"), "0");
+                    if(m.getAmountIfAndSwitch() > 0)
+                        row.set(csv_header.indexOf("Conditional Test Logic"), "1");
+                    if(m.getAmountLoops() > 0)
+                        row.set(csv_header.indexOf("Conditional Test Logic"), "2");
+                    if(m.getAmountIfAndSwitch() > 0 && m.getAmountLoops() > 0)
+                        row.set(csv_header.indexOf("Conditional Test Logic"), "3");
                     row.set(csv_header.indexOf("#ifSwitch"), String.valueOf(m.getAmountIfAndSwitch()));
                     row.set(csv_header.indexOf("#loops"), String.valueOf(m.getAmountLoops()));
                 }
             }
             if(Configuration.getInstance().isLongTest()){
-                List<Method> result = new LongTestDetector().detectLongTestsInFile(file.getAbsolutePath());
+                List<Method> result = new LongTestDetector().detectLongTestsInFile(allMethods, file.getAbsolutePath());
                 for(Method m : result){
+                    if(!m.getMethodDeclaration().replace(" ", "").replace("\t", "").replace("\n", "").startsWith("@Test"))
+                        continue;
                     List<String> row = getRowOfMethod(m, file.getAbsolutePath());
                     if(m.getAmountLines() > -1 && m.getAmountLines() <= Configuration.getInstance().getNumberLines())
                         row.set(csv_header.indexOf("Long Test"), "0");
@@ -101,7 +112,68 @@ public class SmellDetector {
                     row.set(csv_header.indexOf("#statements"), String.valueOf(m.getAmountLines()));
                 }
             }
+            if(Configuration.getInstance().isAssertionRoulette()){
+                List<Method> result = new AssertionRouletteDetector().detectARinFile(allMethods, file.getAbsolutePath());
+                for(Method m : result){
+                    if(!m.getMethodDeclaration().replace(" ", "").replace("\t", "").replace("\n", "").startsWith("@Test"))
+                        continue;
+                    List<String> row = getRowOfMethod(m, file.getAbsolutePath());
+                    int amountAssertions = m.getAmountAssertions();
+                    if(amountAssertions == 0)
+                        row.set(csv_header.indexOf("Assertion Roulette"), "-1");
+                    if(amountAssertions > 0 && amountAssertions <= Configuration.getInstance().getNumberAssertions())
+                        row.set(csv_header.indexOf("Assertion Roulette"), "0");
+                    if(amountAssertions > Configuration.getInstance().getNumberAssertions())
+                        row.set(csv_header.indexOf("Assertion Roulette"), "1");
+                    row.set(csv_header.indexOf("#assertions"), String.valueOf(amountAssertions));
+                }
+            }
+            if(Configuration.getInstance().isRottenGreenTest()){
+                List<Method> result = new RottenGreenTestDetector().detectRGTInFile(allMethods, file.getAbsolutePath());
+                for(Method m : result){
+                    if(!m.getMethodDeclaration().replace(" ", "").replace("\t", "").replace("\n", "").startsWith("@Test"))
+                        continue;
+                    List<String> row = getRowOfMethod(m, file.getAbsolutePath());
+                    int amountAssertions = m.getAmountAssertions();
+                    int amountAssertionsInsideCTL = m.getAmountAssertionsInsideCTL();
+                    int helperInCTL = m.getHelperMethodsInsideCTL();
+                    boolean assertionAfterReturn = m.isAssertionAfterReturn();
+                    // No RGT
+                    if(amountAssertions > 0 && amountAssertionsInsideCTL + helperInCTL == 0 && !assertionAfterReturn) {
+                        row.set(csv_header.indexOf("Rotten Green Test"), "0");
+                        row.set(csv_header.indexOf("Assertion After Return"), "false");
+                    }
+                    // Smoke Test
+                    else if(amountAssertions == 0 && !assertionAfterReturn && amountAssertionsInsideCTL + helperInCTL == 0) {
+                        row.set(csv_header.indexOf("Rotten Green Test"), "1");
+                        row.set(csv_header.indexOf("Assertion After Return"), "false");
+                    }
+                    // RGT: there are assertions or helperMethods (which contain assertions) inside CTL
+                    else if((amountAssertionsInsideCTL > 0 || helperInCTL > 0) && !assertionAfterReturn) {
+                        row.set(csv_header.indexOf("Rotten Green Test"), "2");
+                        row.set(csv_header.indexOf("Assertion After Return"), "false");
+                    }
+                    // RGT: there are assertions after return statements
+                    else if(assertionAfterReturn){
+                        row.set(csv_header.indexOf("Rotten Green Test"), "2");
+                        row.set(csv_header.indexOf("Assertion After Return"), "true");
+                    }
+                    row.set(csv_header.indexOf("Helper called inside CTL"), String.valueOf(helperInCTL));
+                }
+            }
         }
+
+        ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Average time for reading a java-file: " + Statistics.getInstance().getAverageTimeReadingFiles() / 1000000.0f + "ms");
+        if(Configuration.getInstance().isLongTest())
+            ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Average time for counting statements in a method: " + Statistics.getInstance().getAverageTimeToCountStatementsPerMethod() / 1000000.0f + "ms");
+        if(Configuration.getInstance().isRottenGreenTest())
+            ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Average time for detecting RGT: " + Statistics.getInstance().getAverageTimeToDetectRGT() / 1000000.0f + "ms");
+        if(Configuration.getInstance().isConditionalTestLogic())
+            ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Average time for detecting CTL: " + Statistics.getInstance().getAverageTimeToDetectCTL() / 1000000.0f + "ms");
+        if(Configuration.getInstance().isAssertionRoulette())
+            ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Average time for counting assertions in a method: " + Statistics.getInstance().getAverageTimesToCountAssertions() / 1000000.0f + "ms");
+        if(Configuration.getInstance().isAnonymousTest())
+            ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Average time for detecting AT: " + Statistics.getInstance().getAverageTimeToDetectAT() / 1000000.0f + "ms");
 
         ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Finished! Result can now be downloaded as CSV file.");
         ControllerFromOutside.enableDownloadButtonAndResetButton();
@@ -137,7 +209,7 @@ public class SmellDetector {
         List<String> csv_header = new ArrayList<>();
         csv_header.add("Path");
         csv_header.add("Method");
-        csv_header.add("isTestMethod");
+        // csv_header.add("isTestMethod");
 
         if(Configuration.getInstance().isAnonymousTest()){
             csv_header.add("Anonymous Test");
@@ -163,6 +235,8 @@ public class SmellDetector {
         }
         if(Configuration.getInstance().isRottenGreenTest()){
             csv_header.add("Rotten Green Test");
+            csv_header.add("Assertion After Return");
+            csv_header.add("Helper called inside CTL");
         }
         if(Configuration.getInstance().isAssertionRoulette()){
             csv_header.add("Assertion Roulette");

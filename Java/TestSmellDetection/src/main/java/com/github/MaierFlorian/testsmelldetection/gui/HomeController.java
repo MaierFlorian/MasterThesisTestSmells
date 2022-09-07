@@ -32,6 +32,20 @@ public class HomeController {
     @FXML
     private Pane overviewPane;
     @FXML
+    private Pane overviewTestSmellsPane;
+    @FXML
+    private Pane TestSmellsATPane;
+    @FXML
+    private Pane TestSmellsLTPane;
+    @FXML
+    private Pane TestSmellsCTLPane;
+    @FXML
+    private Pane TestSmellsARPane;
+    @FXML
+    private Pane TestSmellsRGTPane;
+    @FXML
+    private Pane overviewToolUsagePane;
+    @FXML
     private Pane detectorPane;
     @FXML
     private Pane detectorFilePane;
@@ -39,6 +53,21 @@ public class HomeController {
     private Pane detectorOptionPane;
     @FXML
     private Pane detectorStartPane;
+
+    @FXML
+    private Label overviewTestSmellsLabel;
+    @FXML
+    private Label overviewToolUsageLabel;
+    @FXML
+    private Label testSmellsATLabel;
+    @FXML
+    private Label testSmellsLTLabel;
+    @FXML
+    private Label testSmellsCTLLabel;
+    @FXML
+    private Label testSmellsARLabel;
+    @FXML
+    private Label testSmellsRGTLabel;
 
     @FXML
     private Button overviewButton;
@@ -372,5 +401,91 @@ public class HomeController {
         detectorStartTextArea.setText("");
 
         onDetectorFileClearButtonClick();
+    }
+
+    @FXML
+    public void onTestSmellButtonClick(){
+        overviewTestSmellsLabel.setStyle("-fx-background-color: #7b7a7f");
+        overviewToolUsageLabel.setStyle("-fx-background-color: #555459");
+        overviewTestSmellsPane.setVisible(true);
+        overviewToolUsagePane.setVisible(false);
+    }
+
+    @FXML
+    public void onToolUsageButtonClick(){
+        overviewTestSmellsLabel.setStyle("-fx-background-color: #555459");
+        overviewToolUsageLabel.setStyle("-fx-background-color: #7b7a7f");
+        overviewTestSmellsPane.setVisible(false);
+        overviewToolUsagePane.setVisible(true);
+    }
+
+    @FXML
+    public void onTestSmellATButtonClick(){
+        testSmellsATLabel.setStyle("-fx-background-color: #555459; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsLTLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsCTLLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsARLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsRGTLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        TestSmellsATPane.setVisible(true);
+        TestSmellsLTPane.setVisible(false);
+        TestSmellsCTLPane.setVisible(false);
+        TestSmellsARPane.setVisible(false);
+        TestSmellsRGTPane.setVisible(false);
+    }
+
+    @FXML
+    public void onTestSmellLTButtonClick(){
+        testSmellsATLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsLTLabel.setStyle("-fx-background-color: #555459; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsCTLLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsARLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsRGTLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        TestSmellsATPane.setVisible(false);
+        TestSmellsLTPane.setVisible(true);
+        TestSmellsCTLPane.setVisible(false);
+        TestSmellsARPane.setVisible(false);
+        TestSmellsRGTPane.setVisible(false);
+    }
+
+    @FXML
+    public void onTestSmellCTLButtonClick(){
+        testSmellsATLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsLTLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsCTLLabel.setStyle("-fx-background-color: #555459; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsARLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsRGTLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        TestSmellsATPane.setVisible(false);
+        TestSmellsLTPane.setVisible(false);
+        TestSmellsCTLPane.setVisible(true);
+        TestSmellsARPane.setVisible(false);
+        TestSmellsRGTPane.setVisible(false);
+    }
+
+    @FXML
+    public void onTestSmellARButtonClick(){
+        testSmellsATLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsLTLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsCTLLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsARLabel.setStyle("-fx-background-color: #555459; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsRGTLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        TestSmellsATPane.setVisible(false);
+        TestSmellsLTPane.setVisible(false);
+        TestSmellsCTLPane.setVisible(false);
+        TestSmellsARPane.setVisible(true);
+        TestSmellsRGTPane.setVisible(false);
+    }
+
+    @FXML
+    public void onTestSmellRGTButtonClick(){
+        testSmellsATLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsLTLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsCTLLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsARLabel.setStyle("-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        testSmellsRGTLabel.setStyle("-fx-background-color: #555459; -fx-border-color: #555459; -fx-border-radius: 2px;");
+        TestSmellsATPane.setVisible(false);
+        TestSmellsLTPane.setVisible(false);
+        TestSmellsCTLPane.setVisible(false);
+        TestSmellsARPane.setVisible(false);
+        TestSmellsRGTPane.setVisible(true);
     }
 }

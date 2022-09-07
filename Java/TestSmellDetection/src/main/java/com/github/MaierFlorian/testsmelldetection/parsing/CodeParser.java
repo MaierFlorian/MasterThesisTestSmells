@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class CodeParser {
 
@@ -73,6 +74,8 @@ public class CodeParser {
     public List<String> getCodeBetweenCurvedBrackets(String startPattern, String content){
         List<String> result = new ArrayList<>();
 
+        content = reduceMultipleSpacesToOne(content);
+
         List<String> startPatternOccurrences = new ArrayList<>();
         Pattern pat = Pattern.compile(startPattern);
         Matcher m = pat.matcher(content);
@@ -82,7 +85,8 @@ public class CodeParser {
 
         for(int i = 0; i<startPatternOccurrences.size(); i++) {
             // select everything from the current startPatternOccurrences to the end of the  code
-            pat = Pattern.compile(startPatternOccurrences.get(i).replace("{", "\\{").replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]") + "(.*)", Pattern.DOTALL);
+            //pat = Pattern.compile(startPatternOccurrences.get(i).replace("{", "\\{").replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace("<", "\\p{Punct}").replace(">", "\\p{Punct}").replace("?", "\\p{Punct}") + "(.|\\n)*+", Pattern.DOTALL);
+            pat = Pattern.compile("(" + pat + ")(.|\\n)*+");
             m = pat.matcher(content);
             boolean found = false;
             while (m.find()) {
@@ -102,12 +106,9 @@ public class CodeParser {
                         if (amountOpenRoundBrackets != 0 && amountClosedRoundBrackets == amountOpenRoundBrackets)
                             isCharAfterRoundBracket = true;
                     }
-                    if(isCharAfterRoundBracket && text.charAt(k+1) != '{'){
-                        stop = true;
-                        content = m.group().substring(pat.toString().length());
+                    else if (isCharAfterRoundBracket && k+1<text.length() && text.charAt(k+1) == '{') // when "{" found after even amount of round brackets
                         break;
-                    }
-                    else if (isCharAfterRoundBracket && text.charAt(k+1) == '{')
+                    else if(amountClosedRoundBrackets == amountOpenRoundBrackets && text.charAt(k) == '{') // if there is a "{" and an even amount of round brackets
                         break;
                 }
                 if(stop)
@@ -139,12 +140,40 @@ public class CodeParser {
     }
 
     public String removeStringsInsideQuotationMarks(String content){
-        Pattern p = Pattern.compile("(\"(.*?)\")|('(.*?)')");
+        Pattern p = Pattern.compile("(\".*?\")|('.*?')");
+        //Pattern p = Pattern.compile("(\"(.*?)\")|('(.*?)')");
         Matcher m = p.matcher(content);
         while (m.find()) {
             content = content.replace(m.group(0), "");
         }
         return content;
+    }
+
+    public String removeUnwantedCharacters(String content){
+        // strips off all non-ASCII characters
+        content = content.replaceAll("[^\\x00-\\x7F]", "");
+
+        // erases all the ASCII control characters
+        content = content.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+
+        // removes non-printable characters from Unicode
+        content = content.replaceAll("\\p{C}", "");
+
+        return content.trim();
+    }
+
+    public String reduceMultipleSpacesToOne(String content){
+        return content.trim().replaceAll(" +", " ");
+    }
+
+    public int countStringInString(String content, String searchString){
+        int amount = 0;
+        String temp[] = content.replace("(", " ").split("\\p{Blank}");
+        for(int i=0; i<temp.length; i++){
+            if(temp[i].toLowerCase().equals(searchString.toLowerCase()))
+                amount += 1;
+        }
+        return amount;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.github.MaierFlorian.testsmelldetection.parsing;
 
 import com.github.MaierFlorian.testsmelldetection.data.Method;
+import com.github.MaierFlorian.testsmelldetection.data.Statistics;
 import com.github.MaierFlorian.testsmelldetection.util.ControllerFromOutside;
 
 import java.time.LocalDateTime;
@@ -20,43 +21,50 @@ public class MethodExtractor {
      * @return A list of "method" objects.
      */
     public List<Method> extractMethodsFromFile(String path){
+        long startTime = System.nanoTime();
+
         List<Method> methods = new ArrayList<>();
 
-        String content = new TextFromFileExtractor().getFileContentWithoutComments(path);
+        String content = new TextFromFileExtractor().getFileContentWithoutComments(path).replace("\r", "");
+        String contentForGettingMethodDeclarations = new TextFromFileExtractor().getFileContentWithoutComments(path).replace("\r", "");
 
         List<String> methodDeclarations = new ArrayList<>();
+        // remove all method bodies, so that we also remove inner methods
+        while(true) {
+            int oldLength = contentForGettingMethodDeclarations.length();
+            List<String> methodBodies = new CodeParser().getCodeBetweenCurvedBrackets("((@Test)?((\\n)|(\\s)|(\\t))*(((public|protected|private|static) +[\\w\\<\\>\\[\\]]+)|((public|protected|private|static)? *void))\\s+(\\w+) *\\([^\\)]*\\)[\\s\\n]*(\\{?|[^;]))", contentForGettingMethodDeclarations);
+            methodBodies.sort((s1, s2) -> s2.length() - s1.length());
+            for (String s : methodBodies)
+                contentForGettingMethodDeclarations = contentForGettingMethodDeclarations.replace(s, "");
+            if(contentForGettingMethodDeclarations.length() == oldLength)
+                break;
+        }
         // select all methodDeclarations
-        Pattern pat = Pattern.compile("((@Test)?((\\n)|(\\s)|(\\t))*(public|protected|private|static|\\s) +[\\w\\<\\>\\[\\]]+\\s+(\\w+) *\\([^\\)]*\\) *(\\{?|[^;]))");
-        Matcher m = pat.matcher(content);
+        Pattern pat = Pattern.compile("((@Test)?((\\n)|(\\s)|(\\t))*(((public|protected|private|static) +[\\w\\<\\>\\[\\]]+)|((public|protected|private|static)? *void))\\s+(\\w+) *\\([^\\)]*\\)[\\s\\n]*(\\{?|[^;]))");
+        Matcher m = pat.matcher(contentForGettingMethodDeclarations);
         while (m.find()) {
             methodDeclarations.add(m.group());
         }
         for(int i = 0; i<methodDeclarations.size(); i++) {
-            // select everything from one methodDeclaration to the next methodDeclaration (excluding)
-            if((i+1)<methodDeclarations.size()) {
-                pat = Pattern.compile(methodDeclarations.get(i).replace("{", "\\{").replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]") +"(.*)(?=" + methodDeclarations.get(i+1).replace("{", "\\{").replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]") + ")", Pattern.DOTALL);
-                m = pat.matcher(content);
-                while (m.find()) {
-                    Method newMethod = new Method();
-                    newMethod.setMethodDeclaration(methodDeclarations.get(i));
-                    newMethod.setMethodName(getMethodName(methodDeclarations.get(i)));
-                    newMethod.setMethodBody(m.group(1));
-                    methods.add(newMethod);
+            Method newMethod = new Method();
+            newMethod.setMethodDeclaration(methodDeclarations.get(i));
+            newMethod.setMethodName(getMethodName(methodDeclarations.get(i)));
+            CodeParser cp = new CodeParser();
+            newMethod.setMethodBody(cp.getCodeBetweenCurvedBrackets("(?<![:] *)(" + getMethodName(methodDeclarations.get(i)) + " *[(][^;]*?)(?=[\\s\\n]*+[{])" ,content).get(0));
+            boolean alreadyInList = false;
+            for(Method me : methods){
+                if(me.getMethodName().equals(newMethod.getMethodName())) {
+                    alreadyInList = true;
+                    break;
                 }
             }
-            // if its the last methodDeclaration in the file, select everything after the methodDeclaration
-            else{
-                pat = Pattern.compile("(" + methodDeclarations.get(i).replace("{", "\\{").replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]") +")(.*)", Pattern.DOTALL);
-                m = pat.matcher(content);
-                while (m.find()) {
-                    Method newMethod = new Method();
-                    newMethod.setMethodDeclaration(methodDeclarations.get(i));
-                    newMethod.setMethodName(getMethodName(methodDeclarations.get(i)));
-                    newMethod.setMethodBody(m.group(2));
-                    methods.add(newMethod);
-                }
-            }
+            if(!alreadyInList)
+                methods.add(newMethod);
         }
+
+        long stopTime = System.nanoTime();
+        Statistics.getInstance().addTimeReadingFiles(stopTime - startTime);
+
         if(!methods.isEmpty())
             ControllerFromOutside.writeToLog("[INFO - " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] Successfully extracted methods from " + path);
         else
@@ -64,8 +72,17 @@ public class MethodExtractor {
         return methods;
     }
 
+    public String getMethodBodyWithoutInnerMethods(String methodBody){
+        CodeParser cp = new CodeParser();
+        List<String> innerMethods = cp.getCodeBetweenCurvedBrackets("@Override", methodBody);
+        for(String s : innerMethods){
+            methodBody = methodBody.replace(s, "");
+        }
+        return methodBody;
+    }
+
     private String getMethodName(String methodDeclaration){
-        Pattern pat = Pattern.compile("\s([a-zA-z0-9]*)(?=[(])");
+        Pattern pat = Pattern.compile("\s([a-zA-z\\d_]*)(?=[(])");
         Matcher m = pat.matcher(methodDeclaration);
         while (m.find()) {
             return m.group().replace(" ", "");
@@ -100,6 +117,17 @@ public class MethodExtractor {
                 nonTestMethods.add(m);
         }
         return nonTestMethods;
+    }
+
+    public List<Method> getHelperMethods(Method testMethod, List<Method> allMethods){
+        List<Method> helperMethods = new ArrayList<>();
+        List<Method> candidates = getNonTestMethods(allMethods);
+        // check if the methodName of a candidate appears in the body of the testMethod
+        for(Method candidate : candidates){
+            if((testMethod.getMethodBody().contains(candidate.getMethodName() + "(") || testMethod.getMethodBody().contains(candidate.getMethodName() + " (")) && !helperMethods.contains(candidate))
+                helperMethods.add(candidate);
+        }
+        return helperMethods;
     }
 
 }

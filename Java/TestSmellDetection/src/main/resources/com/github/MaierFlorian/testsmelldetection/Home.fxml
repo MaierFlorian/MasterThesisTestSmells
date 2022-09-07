@@ -48,15 +48,227 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Pane fx:id="overviewPane" layoutY="50.0" prefHeight="851.0" prefWidth="1216.0" visible="false" AnchorPane.topAnchor="50.0">
+            <AnchorPane fx:id="overviewPane" layoutY="50.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                <children>
-                  <Label layoutX="24.0" layoutY="6.0" prefHeight="40.0" prefWidth="1166.0" text="Overview">
+                  <Label prefHeight="40.0" prefWidth="1166.0" text="Overview" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font name="JetBrains Mono ExtraBold" size="27.0" />
                      </font>
                   </Label>
-               </children>
-            </Pane>
+                  <Label fx:id="overviewTestSmellsLabel" alignment="CENTER" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: #7b7a7f;" text="Test Smells" AnchorPane.bottomAnchor="697.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="1029.0">
+                     <font>
+                        <Font name="JetBrains Mono ExtraBold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="btnTestSmells" mnemonicParsing="false" onAction="#onTestSmellButtonClick" opacity="0.0" prefHeight="50.0" prefWidth="147.0" AnchorPane.bottomAnchor="697.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="1029.0" />
+                  <Label fx:id="overviewToolUsageLabel" alignment="CENTER" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: #555459;" text="Tool Usage" AnchorPane.bottomAnchor="697.0" AnchorPane.leftAnchor="177.0" AnchorPane.rightAnchor="880.0">
+                     <font>
+                        <Font name="JetBrains Mono ExtraBold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="btnToolUsage" layoutX="40.0" layoutY="63.0" mnemonicParsing="false" onAction="#onToolUsageButtonClick" opacity="0.0" prefHeight="50.0" prefWidth="147.0" AnchorPane.bottomAnchor="697.0" AnchorPane.leftAnchor="177.0" AnchorPane.rightAnchor="880.0" />
+                  <AnchorPane fx:id="overviewTestSmellsPane" prefHeight="700.0" prefWidth="1123.0" style="-fx-background-color: #7b7a7f;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="103.0">
+                     <children>
+                        <Label text="In the field of software engineering, the term &quot;smell&quot; refers to a state of code in which it appears necessary to improve it using refactoring methods. In this way, for example, long, confusing code is made readable and easy to understand again. This makes it easier for the code to be maintained and reduces the occurrence of bugs. Such smells occur not only in production code, but also in test code. In software projects, tests are of great importance, and therefore it is also important to write smell-free tests." textAlignment="JUSTIFY" wrapText="true" AnchorPane.bottomAnchor="510.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="testSmellsATLabel" alignment="CENTER" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: #555459; -fx-border-color: #555459; -fx-border-radius: 2px;" text="Anonymous Test" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="930.0" AnchorPane.topAnchor="150.0">
+                           <font>
+                              <Font name="JetBrains Mono ExtraBold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnTestSmellsAT" mnemonicParsing="false" onAction="#onTestSmellATButtonClick" opacity="0.0" prefHeight="50.0" prefWidth="186.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="930.0" AnchorPane.topAnchor="150.0" />
+                        <AnchorPane fx:id="TestSmellsATPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="200.0">
+                           <children>
+                              <Label text="Anonymous tests are tests whose names poorly describe the task of the test. If a test has a good name, it is the name alone that tells you what the test does and you do not have to go through the test line by line. This test smell reduces the reader's understanding. There are many different suggestions for good test naming. Some of them are:" textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label text="1) 'test' + methode name, e.g. &quot;testAdd()&quot;" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="90.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="101.0" text="2) method under test + state under test + expected bahaviour (order can vary), e.g. &quot;isAdult_AgeLessThan18_False()&quot;" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="120.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="131.0" text="3) express a specific requirement, e.g. &quot;testIsNotAnAdultIfAgeLessThan18()&quot;" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="150.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="161.0" text="4) action + condition/state, e.g. &quot;executeOnDisabledControl()&quot;" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="180.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="191.0" text="5) input/state/workflow + output, e.g. &quot;Given_UserIsAuthenticated_When_InvalidAccountNumberIsUsedToWithdrawMoney_Then_TransactionsWillFail()&quot;" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="210.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fitHeight="137.0" fitWidth="808.0" layoutX="98.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="69.4339599609375" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="258.0">
+                                 <image>
+                                    <Image url="@images/at-example.png" />
+                                 </image>
+                              </ImageView>
+                           </children></AnchorPane>
+                        <Label fx:id="testSmellsLTLabel" alignment="CENTER" layoutX="40.0" layoutY="160.0" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;" text="Long Test" AnchorPane.leftAnchor="216.0" AnchorPane.rightAnchor="770.0" AnchorPane.topAnchor="150.0">
+                           <font>
+                              <Font name="JetBrains Mono ExtraBold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnTestSmellsLT" layoutX="40.0" layoutY="160.0" mnemonicParsing="false" onAction="#onTestSmellLTButtonClick" opacity="0.0" prefHeight="50.0" prefWidth="186.0" AnchorPane.leftAnchor="216.0" AnchorPane.rightAnchor="770.0" AnchorPane.topAnchor="150.0" />
+                        <AnchorPane fx:id="TestSmellsLTPane" layoutX="40.0" layoutY="210.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;" visible="false" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="200.0">
+                           <children>
+                              <Label text="A long test occurs when a test method has reached a length that makes the test method less manageable and understandable. The measured variable is typically the number of statements. A statement in Java is an instruction that is to be executed. There are three types of Java statements: Expression Statements, Declaration Statements, and Control Statements. Expression statements are usually used to calculate or assign values. Declaration statements are those instructions that declare a new variable or constant, including data type and name. Control statements decide on the course of the program. These include conditional statements, loops, and jump statements (such as ’return’ and ’break’)." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fitHeight="218.0" fitWidth="702.0" layoutX="52.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="333.0" AnchorPane.topAnchor="150.0">
+                                 <image>
+                                    <Image url="@images/lt-example.PNG" />
+                                 </image>
+                              </ImageView>
+                           </children></AnchorPane>
+                        <Label fx:id="testSmellsCTLLabel" alignment="CENTER" layoutX="226.0" layoutY="160.0" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;" text="Conditional Test Logic" AnchorPane.leftAnchor="376.0" AnchorPane.rightAnchor="490.0" AnchorPane.topAnchor="150.0">
+                           <font>
+                              <Font name="JetBrains Mono ExtraBold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnTestSmellsCTL" layoutX="226.0" layoutY="160.0" mnemonicParsing="false" onAction="#onTestSmellCTLButtonClick" opacity="0.0" prefHeight="50.0" prefWidth="186.0" AnchorPane.leftAnchor="376.0" AnchorPane.rightAnchor="490.0" AnchorPane.topAnchor="150.0" />
+                        <AnchorPane fx:id="TestSmellsCTLPane" layoutX="40.0" layoutY="210.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;" visible="false" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="200.0">
+                           <children>
+                              <Label text="If a test method contains so-called control statements, the execution order of the method is influenced. This means that depending on a condition, the course of the execution is changed. For example, a part of the code is only executed under a certain condition and another part is executed several times. If this is the case with a test method, it is called Conditional Test Logic. Conditional Test Logic in test methods brings with it three problems:" textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="31.0" text="1) The complexity increases: it is more difficult to see what is happening in the method because you have to pay attention to certain conditions." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="100.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="32.0" layoutY="111.0" text="2) The test method does not necessarily always produce the same result, but depends on a condition." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="130.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="141.0" text="3) Other test smells can be caused by this. For example, an assertion within a conditional block cannot be executed because the condition is not met. This causes the Rotten Green test smell." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="160.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children></AnchorPane>
+                        <Label fx:id="testSmellsARLabel" alignment="CENTER" layoutX="386.0" layoutY="160.0" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;" text="Assertion Roulette" AnchorPane.leftAnchor="656.0" AnchorPane.rightAnchor="243.0" AnchorPane.topAnchor="150.0">
+                           <font>
+                              <Font name="JetBrains Mono ExtraBold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnTestSmellsAR" layoutX="386.0" layoutY="160.0" mnemonicParsing="false" onAction="#onTestSmellARButtonClick" opacity="0.0" prefHeight="50.0" prefWidth="186.0" AnchorPane.leftAnchor="656.0" AnchorPane.rightAnchor="243.0" AnchorPane.topAnchor="150.0" />
+                        <AnchorPane fx:id="TestSmellsARPane" layoutX="40.0" layoutY="210.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;" visible="false" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="200.0">
+                           <children>
+                              <Label text="If a test method contains several assertion statements, it is called an assertion roulette. The name comes from the fact that if the test method fails, one does not know which of the assertion statements is to blame. For this reason, it is good practice to use only one assertion-statement per test method." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fitHeight="236.0" fitWidth="614.0" layoutX="202.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="280.0" AnchorPane.topAnchor="101.0">
+                                 <image>
+                                    <Image url="@images/ar-example.PNG" />
+                                 </image>
+                              </ImageView>
+                           </children></AnchorPane>
+                        <Label fx:id="testSmellsRGTLabel" alignment="CENTER" layoutX="666.0" layoutY="160.0" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;" text="Rotten Green Test" AnchorPane.leftAnchor="903.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="150.0">
+                           <font>
+                              <Font name="JetBrains Mono ExtraBold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnTestSmellsRGT" layoutX="666.0" layoutY="160.0" mnemonicParsing="false" onAction="#onTestSmellRGTButtonClick" opacity="0.0" prefHeight="50.0" prefWidth="186.0" AnchorPane.leftAnchor="903.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="150.0" />
+                        <AnchorPane fx:id="TestSmellsRGTPane" layoutX="40.0" layoutY="210.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7b7a7f; -fx-border-color: #555459; -fx-border-radius: 2px;" visible="false" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="200.0">
+                           <children>
+                              <Label text="If a test method contains assertions which are not executed (possibly under certain conditions), this is called a Rotten Green Test. This smell provides a false sense of security for the developer. If a rotten green test is executed, it may appear to be a successful test, even though some assertions have not been executed at all. We distinguish between the following scenarios for this smell:" textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label text="1) An assert-statement is located within conditional test logic (e.g. if- and try-statements or loops). Here, the execution of the assert-statement depends on a condition. In our experience, this is the most common cause of a Rotten Green test." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="111.0" text="2) An assert-statement is located after a return-statement. Sometimes a method is terminated early by a return-statement. If this is the case, subsequent assertions are no longer executed." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="150.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="161.0" text="3) The test method itself is not rotten, but it includes helper methods which are rotten." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="200.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="211.0" text="4) The test method calls a helper method (which contains assertions). However, this call is made within CTL." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="230.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="241.0" text="5) The test method does not include assert statements. Strictly speaking, this is a so-called smoke test and not a rotten green test. However, here too the test lights up as passed, although no assertions have been carried out." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="260.0">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children></AnchorPane>
+                     </children></AnchorPane>
+                  <AnchorPane fx:id="overviewToolUsagePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7b7a7f;" visible="false" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="103.0">
+                     <children>
+                        <Label text="The test smell detection tool currently focuses on the following test smells: (1) Anonymous Test, (2) Long Test, (3) Conditional Test Logic, (4) Rotten Green Test, and (5) Assertion Roulette. The detection concentrates on smells in JUnit test code. The tool only analyses Java test files. The source code is not included in the analysis. The aim is to achieve the highest possible accuracy with the shortest possible runtime. The detection of the smells is based on a rules/heuristic approach, whereby the source code is searched for patterns using regular expressions. Natural language processing methods, more precisely part-of-speech (POS) tagging, are also used." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label text="How to use:" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="150.0">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label text="1) Select the menu item &quot;Detector&quot;." AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="190.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="40.0" layoutY="200.0" text="2) Select the Java files to be examined. These should contain JUnit test methods. If this is not the case, they are ignored during the analysis." wrapText="true" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="220.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="40.0" layoutY="230.0" text="3) Click on &quot;Next&quot; and select which test smells to search for. There are several options for customisation." wrapText="true" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="250.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="40.0" layoutY="260.0" text="4) Click on &quot;Next&quot; and then on &quot;Start&quot;. Depending on the amount of Java files specified and the configuration, this step will take some time." wrapText="true" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="280.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="40.0" layoutY="290.0" text="5) Once the analysis is complete, you can download the result as a csv file." wrapText="true" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="310.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="40.0" layoutY="320.0" text="6) If you want to carry out a new analysis, click on &quot;reset&quot;." wrapText="true" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="340.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
+               </children></AnchorPane>
             <AnchorPane fx:id="detectorPane" layoutY="50.0" visible="false" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                <children>
                   <Label prefHeight="40.0" prefWidth="1166.0" text="Test Smell Detection" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="0.0">
@@ -178,12 +390,12 @@
                                     <Font name="JetBrains Mono ExtraBold" size="14.0" />
                                  </font>
                               </ToggleButton>
-                              <ToggleButton fx:id="OptionETButton" layoutX="219.0" layoutY="509.0" mnemonicParsing="false" onAction="#onOptionETButtonClick" prefHeight="25.0" prefWidth="60.0" selected="true" style="-fx-background-radius: 30; -fx-background-color: green;" text="On">
+                              <ToggleButton fx:id="OptionETButton" disable="true" layoutX="219.0" layoutY="509.0" mnemonicParsing="false" onAction="#onOptionETButtonClick" prefHeight="25.0" prefWidth="60.0" selected="true" style="-fx-background-radius: 30; -fx-background-color: red;" text="Off">
                                  <font>
                                     <Font name="JetBrains Mono ExtraBold" size="14.0" />
                                  </font>
                               </ToggleButton>
-                              <ToggleButton fx:id="OptionLzTButton" layoutX="219.0" layoutY="569.0" mnemonicParsing="false" onAction="#onOptionLzTButtonClick" prefHeight="25.0" prefWidth="60.0" selected="true" style="-fx-background-radius: 30; -fx-background-color: green;" text="On">
+                              <ToggleButton fx:id="OptionLzTButton" disable="true" layoutX="219.0" layoutY="569.0" mnemonicParsing="false" onAction="#onOptionLzTButtonClick" prefHeight="25.0" prefWidth="60.0" selected="true" style="-fx-background-radius: 30; -fx-background-color: red;" text="Off">
                                  <font>
                                     <Font name="JetBrains Mono ExtraBold" size="14.0" />
                                  </font>
@@ -240,7 +452,7 @@
                                  </font>
                               </ToggleButton>
                               <Line endX="522.0" endY="-120.0" layoutX="604.0" layoutY="310.0" startX="-283.5" startY="-120.0" />
-                              <Label alignment="CENTER_RIGHT" layoutX="773.0" layoutY="204.0" prefHeight="61.0" prefWidth="208.0" text="#lines">
+                              <Label alignment="CENTER_RIGHT" layoutX="773.0" layoutY="204.0" prefHeight="61.0" prefWidth="208.0" text="#statements">
                                  <font>
                                     <Font name="JetBrains Mono ExtraBold" size="14.0" />
                                  </font>
