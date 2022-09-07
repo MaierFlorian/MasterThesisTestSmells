@@ -5,7 +5,7 @@ from datetime import date
 import base64
 import pandas as pd
 
-ACCESS_TOKEN = "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"
+ACCESS_TOKEN = "######################"
 
 g = Github(ACCESS_TOKEN)
 
