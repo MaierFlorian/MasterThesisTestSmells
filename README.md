@@ -1,14 +1,7 @@
 # MasterThesisTestSmells
 
-Test smells are poorly designed tests that negatively affect the quality of test suites and even production code. Therefore, automation supported detection of test smells is of high importance. However, current test smell detection approaches are very unspecific or shallow and for instance just count the number of test assertions per test case. In this thesis approaches for deeper test smell analysis are developed and investigated.
+In the field of software engineering, the term "smell" refers to a state of code in which it appears necessary to improve it using refactoring methods. In this way, for example, long, confusing code is made readable and easy to understand again. This makes it easier for the code to be maintained and reduces the occurrence of bugs. Such smells occur not only in production code, but also in test code. In software projects, tests are of great importance, and therefore it is also important to write smell-free tests.
 
-## Goals
+This master thesis is dedicated to the creation of a test smell detection tool that detects a total of five test smells, namely the anonymous test, assertion roulette, long test, rotten green test and conditional test logic smell, in JUnit tests. This not only adds our tool to the list of existing detection tools, but also expands the list of recognizable smells, as it is the first tool to recognize the anonymous test.
 
-- Collect suitable open source projects for analysis.
-- Implement test smell detection algorithms for chosen test smells. In more detail, try to improve detection algorithms used by existing tools.
-- Perform an empirical analysis of the developed test smells detection algorithms based on the set of open source projects.
-- Provide a labelled data set of open source projects with annotated test smells.
-
-## Target Language
-
-The tool is written in Java and is used to detect test smells in Java software projects. The target test framework is JUnit.
+Furthermore, in the course of this master thesis, a dataset of JUnit tests was created to measure the accuracy of our tool. The tool proved to be highly accurate with a precision of about 87-100\%.
