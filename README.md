@@ -8,4 +8,4 @@ Furthermore, in the course of this master thesis, a dataset of JUnit tests was c
 
 ## How to run the tool
 
-Execute the TestSmellDetector.jar file with the command `java -jar TestSmellDetector.jar`.
+Execute the TestSmellDetector.jar file with the command `java -jar TestSmellDetector.jar` or by double-clicking on it.
