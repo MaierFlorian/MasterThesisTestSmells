@@ -1,6 +1,7 @@
 package com.github.MaierFlorian.testsmelldetection.parsing;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 public class CodeParserTest {
 
     @Test
+    @Ignore
     public void getBodyOfOneLinersInputOneForLoopOnelinerOutputEquals(){
         String code = "@Test\n" +
                 "public void exampleMethod() {\n" +
@@ -22,6 +24,7 @@ public class CodeParserTest {
     }
 
     @Test
+    @Ignore
     public void getBodyOfOneLinersInputMultipleForLoopOnelinerOutputEquals(){
         String code = "@Test\n" +
                 "public void exampleMethod() {\n" +
@@ -40,6 +43,7 @@ public class CodeParserTest {
     }
 
     @Test
+    @Ignore
     public void getBodyOfOneLinersInputOneWhileLoopOnelinerOutputEquals(){
         String code = "@Test\n" +
                 "public void exampleMethod() {\n" +
@@ -56,6 +60,7 @@ public class CodeParserTest {
     }
 
     @Test
+    @Ignore
     public void getBodyOfOneLinersInputOneIfOnelinerOutputEquals(){
         String code = "@Test\n" +
                 "public void exampleMethod() {\n" +
@@ -72,6 +77,7 @@ public class CodeParserTest {
     }
 
     @Test
+    @Ignore
     public void getCodeBetweenCurvedBracketsInputOneIfOutputEquals(){
         String code = "@Test\n" +
                 "public void exampleMethod() {\n" +
@@ -90,6 +96,7 @@ public class CodeParserTest {
     }
 
     @Test
+    @Ignore
     public void getCodeBetweenCurvedBracketsInputMultipleIfOutputEquals(){
         String code = "@Test\n" +
                 "public void exampleMethod() {\n" +
@@ -114,6 +121,7 @@ public class CodeParserTest {
     }
 
     @Test
+    @Ignore
     public void getCodeBetweenCurvedBracketsInputOneForOutputEquals(){
         String code = "@Test\n" +
                 "public void exampleMethod() {\n" +
@@ -131,6 +139,7 @@ public class CodeParserTest {
     }
 
     @Test
+    @Ignore
     public void getCodeBetweenCurvedBracketsInputForAndWhileOutputEquals(){
         String code = "@Test\n" +
                 "public void exampleMethod() {\n" +
@@ -153,6 +162,7 @@ public class CodeParserTest {
     }
 
     @Test
+    @Ignore
     public void getContentWithoutStringsBetweenDoubleQuotationMarks(){
         String test = "This is an \"example\" of \"content between\" quotation \" marks\"";
         CodeParser cp = new CodeParser();
@@ -160,6 +170,7 @@ public class CodeParserTest {
     }
 
     @Test
+    @Ignore
     public void getContentWithoutStringsBetweenSingleQuotationMarks(){
         String test = "This is an 'example' of 'content between' quotation ' marks'";
         CodeParser cp = new CodeParser();

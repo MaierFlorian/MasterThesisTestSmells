@@ -1,6 +1,7 @@
 package com.github.MaierFlorian.testsmelldetection.nlp;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 public class MethodNameAnalyserTest {
 
     @Test
+    @Ignore
     public void splitCamelCaseCheckForAmountWordsOutputTrue(){
         String text = "exampleCamelCaseWordWith1Number";
         List<String> words = new MethodNameAnalyser().splitCamelCase(text);
@@ -17,6 +19,7 @@ public class MethodNameAnalyserTest {
     }
 
     @Test
+    @Ignore
     public void splitCamelCaseInput7WordsOutputFirstWordEquals(){
         String text = "exampleCamelCaseWordWith1Number";
         List<String> words = new MethodNameAnalyser().splitCamelCase(text);
@@ -24,6 +27,7 @@ public class MethodNameAnalyserTest {
     }
 
     @Test
+    @Ignore
     public void splitCamelCaseInput7WordsOutputLastWordEquals(){
         String text = "exampleCamelCaseWordWith1Number";
         List<String> words = new MethodNameAnalyser().splitCamelCase(text);
@@ -31,6 +35,7 @@ public class MethodNameAnalyserTest {
     }
 
     @Test
+    @Ignore
     public void splitCamelCaseInput7WordsOutputNumberEquals(){
         String text = "exampleCamelCaseWordWith1Number";
         List<String> words = new MethodNameAnalyser().splitCamelCase(text);
@@ -38,6 +43,7 @@ public class MethodNameAnalyserTest {
     }
 
     @Test
+    @Ignore
     public void testPosTaggingInputComputerOutputNN(){
         List<String> inputWords = new ArrayList<>();
         String word = "Computer"; // Noun
@@ -47,6 +53,7 @@ public class MethodNameAnalyserTest {
     }
 
     @Test
+    @Ignore
     public void testPosTaggingInputGamingOutputVBG(){
         List<String> inputWords = new ArrayList<>();
         String word = "Gaming"; // Verb
@@ -56,6 +63,7 @@ public class MethodNameAnalyserTest {
     }
 
     @Test
+    @Ignore
     public void testPosTaggingInputBeautifulOutputJJ(){
         List<String> inputWords = new ArrayList<>();
         String word = "Beautiful"; // Adjective
@@ -65,6 +73,7 @@ public class MethodNameAnalyserTest {
     }
 
     @Test
+    @Ignore
     public void testPosTaggingInputWithOutputIN(){
         List<String> inputWords = new ArrayList<>();
         String word = "with"; // Preposition
